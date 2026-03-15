@@ -1,2 +1,7 @@
+# from Quarto (auto-generated)
 /.quarto/
 **/*.quarto_ipynb
+
+# macOS stuff
+.DS_Store
+
