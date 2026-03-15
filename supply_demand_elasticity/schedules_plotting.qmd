@@ -1,0 +1,19 @@
+---
+title: "Plotting Supply and Demand Schedules (Tables)"
+format: html
+---
+
+`Plots.jl` is the standard plotting library for Julia:
+
+```{julia}
+using Plots
+```
+
+For testing purposes, here's a sine curve:
+
+```{julia}
+x = -2 : 0.01 : 2;
+y = sin.(x);
+plot(x, y)
+```
+
