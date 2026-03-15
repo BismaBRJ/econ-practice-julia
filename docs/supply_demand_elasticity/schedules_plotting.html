@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Plotting Supply and Demand Schedules (Tables) – econ-practice-julia</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">econ-practice-julia</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="../supply_demand_elasticity/schedules_plotting.html" aria-current="page"> 
+<span class="menu-text">Plotting Supply and Demand Schedules (Tables)</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Plotting Supply and Demand Schedules (Tables)</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><code>Plots.jl</code> is the standard plotting library for Julia:</p>
+<div id="95afe629" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Plots</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>For testing purposes, here’s a sine curve:</p>
+<div id="005d13bf" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="op">-</span><span class="fl">2</span> <span class="op">:</span> <span class="fl">0.01</span> <span class="op">:</span> <span class="fl">2</span>;</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> <span class="fu">sin</span>.(x);</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, y)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<!--?xml version="1.0" encoding="utf-8"?-->
+<svg xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" width="672" height="480" viewbox="0 0 2688 1920">
+<defs>
+  <clippath id="clip990">
+    <rect x="0" y="0" width="2688" height="1920"></rect>
+  </clippath>
+</defs>
+<path clip-path="url(#clip990)" d="M0 1920 L2688 1920 L2688 0 L0 0  Z" fill="#ffffff" fill-rule="evenodd" fill-opacity="1"></path>
+<defs>
+  <clippath id="clip991">
+    <rect x="196" y="47" width="2445" height="1755"></rect>
+  </clippath>
+</defs>
+<path clip-path="url(#clip990)" d="M196.816 1800.78 L2640.76 1800.78 L2640.76 47.2441 L196.816 47.2441  Z" fill="#ffffff" fill-rule="evenodd" fill-opacity="1"></path>
+<polyline clip-path="url(#clip991)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:2; stroke-opacity:0.1; fill:none" points="265.984,1800.78 265.984,47.2441 "></polyline>
+<polyline clip-path="url(#clip991)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:2; stroke-opacity:0.1; fill:none" points="842.385,1800.78 842.385,47.2441 "></polyline>
+<polyline clip-path="url(#clip991)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:2; stroke-opacity:0.1; fill:none" points="1418.79,1800.78 1418.79,47.2441 "></polyline>
+<polyline clip-path="url(#clip991)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:2; stroke-opacity:0.1; fill:none" points="1995.19,1800.78 1995.19,47.2441 "></polyline>
+<polyline clip-path="url(#clip991)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:2; stroke-opacity:0.1; fill:none" points="2571.59,1800.78 2571.59,47.2441 "></polyline>
+<polyline clip-path="url(#clip991)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:2; stroke-opacity:0.1; fill:none" points="196.816,1751.15 2640.76,1751.15 "></polyline>
+<polyline clip-path="url(#clip991)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:2; stroke-opacity:0.1; fill:none" points="196.816,1337.58 2640.76,1337.58 "></polyline>
+<polyline clip-path="url(#clip991)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:2; stroke-opacity:0.1; fill:none" points="196.816,924.012 2640.76,924.012 "></polyline>
+<polyline clip-path="url(#clip991)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:2; stroke-opacity:0.1; fill:none" points="196.816,510.442 2640.76,510.442 "></polyline>
+<polyline clip-path="url(#clip991)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:2; stroke-opacity:0.1; fill:none" points="196.816,96.8722 2640.76,96.8722 "></polyline>
+<polyline clip-path="url(#clip990)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="196.816,1800.78 2640.76,1800.78 "></polyline>
+<polyline clip-path="url(#clip990)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="265.984,1800.78 265.984,1781.88 "></polyline>
+<polyline clip-path="url(#clip990)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="842.385,1800.78 842.385,1781.88 "></polyline>
+<polyline clip-path="url(#clip990)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="1418.79,1800.78 1418.79,1781.88 "></polyline>
+<polyline clip-path="url(#clip990)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="1995.19,1800.78 1995.19,1781.88 "></polyline>
+<polyline clip-path="url(#clip990)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="2571.59,1800.78 2571.59,1781.88 "></polyline>
+<path clip-path="url(#clip990)" d="M235.926 1848.65 L265.602 1848.65 L265.602 1852.59 L235.926 1852.59 L235.926 1848.65 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip990)" d="M279.722 1861.55 L296.042 1861.55 L296.042 1865.48 L274.097 1865.48 L274.097 1861.55 Q276.76 1858.79 281.343 1854.16 Q285.949 1849.51 287.13 1848.17 Q289.375 1845.65 290.255 1843.91 Q291.158 1842.15 291.158 1840.46 Q291.158 1837.71 289.213 1835.97 Q287.292 1834.23 284.19 1834.23 Q281.991 1834.23 279.537 1835 Q277.107 1835.76 274.329 1837.31 L274.329 1832.59 Q277.153 1831.46 279.607 1830.88 Q282.06 1830.3 284.097 1830.3 Q289.468 1830.3 292.662 1832.98 Q295.857 1835.67 295.857 1840.16 Q295.857 1842.29 295.046 1844.21 Q294.259 1846.11 292.153 1848.7 Q291.574 1849.37 288.472 1852.59 Q285.371 1855.78 279.722 1861.55 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip990)" d="M812.142 1848.65 L841.818 1848.65 L841.818 1852.59 L812.142 1852.59 L812.142 1848.65 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip990)" d="M852.721 1861.55 L860.359 1861.55 L860.359 1835.18 L852.049 1836.85 L852.049 1832.59 L860.313 1830.92 L864.989 1830.92 L864.989 1861.55 L872.628 1861.55 L872.628 1865.48 L852.721 1865.48 L852.721 1861.55 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip990)" d="M1418.79 1834 Q1415.17 1834 1413.35 1837.57 Q1411.54 1841.11 1411.54 1848.24 Q1411.54 1855.34 1413.35 1858.91 Q1415.17 1862.45 1418.79 1862.45 Q1422.42 1862.45 1424.23 1858.91 Q1426.05 1855.34 1426.05 1848.24 Q1426.05 1841.11 1424.23 1837.57 Q1422.42 1834 1418.79 1834 M1418.79 1830.3 Q1424.6 1830.3 1427.65 1834.9 Q1430.73 1839.49 1430.73 1848.24 Q1430.73 1856.96 1427.65 1861.57 Q1424.6 1866.15 1418.79 1866.15 Q1412.98 1866.15 1409.9 1861.57 Q1406.84 1856.96 1406.84 1848.24 Q1406.84 1839.49 1409.9 1834.9 Q1412.98 1830.3 1418.79 1830.3 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip990)" d="M1985.57 1861.55 L1993.21 1861.55 L1993.21 1835.18 L1984.9 1836.85 L1984.9 1832.59 L1993.16 1830.92 L1997.84 1830.92 L1997.84 1861.55 L2005.48 1861.55 L2005.48 1865.48 L1985.57 1865.48 L1985.57 1861.55 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip990)" d="M2566.24 1861.55 L2582.56 1861.55 L2582.56 1865.48 L2560.62 1865.48 L2560.62 1861.55 Q2563.28 1858.79 2567.86 1854.16 Q2572.47 1849.51 2573.65 1848.17 Q2575.89 1845.65 2576.77 1843.91 Q2577.68 1842.15 2577.68 1840.46 Q2577.68 1837.71 2575.73 1835.97 Q2573.81 1834.23 2570.71 1834.23 Q2568.51 1834.23 2566.06 1835 Q2563.62 1835.76 2560.85 1837.31 L2560.85 1832.59 Q2563.67 1831.46 2566.12 1830.88 Q2568.58 1830.3 2570.62 1830.3 Q2575.99 1830.3 2579.18 1832.98 Q2582.37 1835.67 2582.37 1840.16 Q2582.37 1842.29 2581.56 1844.21 Q2580.78 1846.11 2578.67 1848.7 Q2578.09 1849.37 2574.99 1852.59 Q2571.89 1855.78 2566.24 1861.55 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><polyline clip-path="url(#clip990)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="196.816,1800.78 196.816,47.2441 "></polyline>
+<polyline clip-path="url(#clip990)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="196.816,1751.15 215.714,1751.15 "></polyline>
+<polyline clip-path="url(#clip990)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="196.816,1337.58 215.714,1337.58 "></polyline>
+<polyline clip-path="url(#clip990)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="196.816,924.012 215.714,924.012 "></polyline>
+<polyline clip-path="url(#clip990)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="196.816,510.442 215.714,510.442 "></polyline>
+<polyline clip-path="url(#clip990)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="196.816,96.8722 215.714,96.8722 "></polyline>
+<path clip-path="url(#clip990)" d="M49.5521 1751.6 L79.2279 1751.6 L79.2279 1755.54 L49.5521 1755.54 L49.5521 1751.6 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip990)" d="M90.1306 1764.5 L97.7695 1764.5 L97.7695 1738.13 L89.4593 1739.8 L89.4593 1735.54 L97.7232 1733.87 L102.399 1733.87 L102.399 1764.5 L110.038 1764.5 L110.038 1768.43 L90.1306 1768.43 L90.1306 1764.5 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip990)" d="M119.482 1762.55 L124.367 1762.55 L124.367 1768.43 L119.482 1768.43 L119.482 1762.55 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip990)" d="M144.552 1736.95 Q140.941 1736.95 139.112 1740.51 Q137.306 1744.06 137.306 1751.19 Q137.306 1758.29 139.112 1761.86 Q140.941 1765.4 144.552 1765.4 Q148.186 1765.4 149.991 1761.86 Q151.82 1758.29 151.82 1751.19 Q151.82 1744.06 149.991 1740.51 Q148.186 1736.95 144.552 1736.95 M144.552 1733.25 Q150.362 1733.25 153.417 1737.85 Q156.496 1742.44 156.496 1751.19 Q156.496 1759.91 153.417 1764.52 Q150.362 1769.1 144.552 1769.1 Q138.741 1769.1 135.663 1764.52 Q132.607 1759.91 132.607 1751.19 Q132.607 1742.44 135.663 1737.85 Q138.741 1733.25 144.552 1733.25 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip990)" d="M50.5475 1338.03 L80.2233 1338.03 L80.2233 1341.97 L50.5475 1341.97 L50.5475 1338.03 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip990)" d="M100.316 1323.38 Q96.7047 1323.38 94.876 1326.94 Q93.0704 1330.49 93.0704 1337.62 Q93.0704 1344.72 94.876 1348.29 Q96.7047 1351.83 100.316 1351.83 Q103.95 1351.83 105.756 1348.29 Q107.584 1344.72 107.584 1337.62 Q107.584 1330.49 105.756 1326.94 Q103.95 1323.38 100.316 1323.38 M100.316 1319.68 Q106.126 1319.68 109.181 1324.28 Q112.26 1328.87 112.26 1337.62 Q112.26 1346.34 109.181 1350.95 Q106.126 1355.53 100.316 1355.53 Q94.5056 1355.53 91.4269 1350.95 Q88.3714 1346.34 88.3714 1337.62 Q88.3714 1328.87 91.4269 1324.28 Q94.5056 1319.68 100.316 1319.68 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip990)" d="M120.478 1348.98 L125.362 1348.98 L125.362 1354.86 L120.478 1354.86 L120.478 1348.98 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip990)" d="M135.593 1320.3 L153.95 1320.3 L153.95 1324.24 L139.876 1324.24 L139.876 1332.71 Q140.894 1332.36 141.913 1332.2 Q142.931 1332.01 143.95 1332.01 Q149.737 1332.01 153.116 1335.19 Q156.496 1338.36 156.496 1343.77 Q156.496 1349.35 153.024 1352.45 Q149.552 1355.53 143.232 1355.53 Q141.056 1355.53 138.788 1355.16 Q136.542 1354.79 134.135 1354.05 L134.135 1349.35 Q136.218 1350.49 138.441 1351.04 Q140.663 1351.6 143.14 1351.6 Q147.144 1351.6 149.482 1349.49 Q151.82 1347.38 151.82 1343.77 Q151.82 1340.16 149.482 1338.06 Q147.144 1335.95 143.14 1335.95 Q141.265 1335.95 139.39 1336.37 Q137.538 1336.78 135.593 1337.66 L135.593 1320.3 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip990)" d="M99.3204 909.81 Q95.7093 909.81 93.8806 913.375 Q92.075 916.917 92.075 924.046 Q92.075 931.153 93.8806 934.718 Q95.7093 938.259 99.3204 938.259 Q102.955 938.259 104.76 934.718 Q106.589 931.153 106.589 924.046 Q106.589 916.917 104.76 913.375 Q102.955 909.81 99.3204 909.81 M99.3204 906.107 Q105.131 906.107 108.186 910.713 Q111.265 915.296 111.265 924.046 Q111.265 932.773 108.186 937.38 Q105.131 941.963 99.3204 941.963 Q93.5102 941.963 90.4315 937.38 Q87.376 932.773 87.376 924.046 Q87.376 915.296 90.4315 910.713 Q93.5102 906.107 99.3204 906.107 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip990)" d="M119.482 935.412 L124.367 935.412 L124.367 941.292 L119.482 941.292 L119.482 935.412 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip990)" d="M144.552 909.81 Q140.941 909.81 139.112 913.375 Q137.306 916.917 137.306 924.046 Q137.306 931.153 139.112 934.718 Q140.941 938.259 144.552 938.259 Q148.186 938.259 149.991 934.718 Q151.82 931.153 151.82 924.046 Q151.82 916.917 149.991 913.375 Q148.186 909.81 144.552 909.81 M144.552 906.107 Q150.362 906.107 153.417 910.713 Q156.496 915.296 156.496 924.046 Q156.496 932.773 153.417 937.38 Q150.362 941.963 144.552 941.963 Q138.741 941.963 135.663 937.38 Q132.607 932.773 132.607 924.046 Q132.607 915.296 135.663 910.713 Q138.741 906.107 144.552 906.107 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip990)" d="M100.316 496.241 Q96.7047 496.241 94.876 499.805 Q93.0704 503.347 93.0704 510.477 Q93.0704 517.583 94.876 521.148 Q96.7047 524.69 100.316 524.69 Q103.95 524.69 105.756 521.148 Q107.584 517.583 107.584 510.477 Q107.584 503.347 105.756 499.805 Q103.95 496.241 100.316 496.241 M100.316 492.537 Q106.126 492.537 109.181 497.143 Q112.26 501.727 112.26 510.477 Q112.26 519.203 109.181 523.81 Q106.126 528.393 100.316 528.393 Q94.5056 528.393 91.4269 523.81 Q88.3714 519.203 88.3714 510.477 Q88.3714 501.727 91.4269 497.143 Q94.5056 492.537 100.316 492.537 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip990)" d="M120.478 521.842 L125.362 521.842 L125.362 527.722 L120.478 527.722 L120.478 521.842 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip990)" d="M135.593 493.162 L153.95 493.162 L153.95 497.097 L139.876 497.097 L139.876 505.569 Q140.894 505.222 141.913 505.06 Q142.931 504.875 143.95 504.875 Q149.737 504.875 153.116 508.046 Q156.496 511.217 156.496 516.634 Q156.496 522.213 153.024 525.315 Q149.552 528.393 143.232 528.393 Q141.056 528.393 138.788 528.023 Q136.542 527.652 134.135 526.912 L134.135 522.213 Q136.218 523.347 138.441 523.903 Q140.663 524.458 143.14 524.458 Q147.144 524.458 149.482 522.352 Q151.82 520.245 151.82 516.634 Q151.82 513.023 149.482 510.916 Q147.144 508.81 143.14 508.81 Q141.265 508.81 139.39 509.227 Q137.538 509.643 135.593 510.523 L135.593 493.162 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip990)" d="M90.1306 110.217 L97.7695 110.217 L97.7695 83.8514 L89.4593 85.5181 L89.4593 81.2588 L97.7232 79.5922 L102.399 79.5922 L102.399 110.217 L110.038 110.217 L110.038 114.152 L90.1306 114.152 L90.1306 110.217 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip990)" d="M119.482 108.273 L124.367 108.273 L124.367 114.152 L119.482 114.152 L119.482 108.273 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip990)" d="M144.552 82.6709 Q140.941 82.6709 139.112 86.2357 Q137.306 89.7773 137.306 96.9069 Q137.306 104.013 139.112 107.578 Q140.941 111.12 144.552 111.12 Q148.186 111.12 149.991 107.578 Q151.82 104.013 151.82 96.9069 Q151.82 89.7773 149.991 86.2357 Q148.186 82.6709 144.552 82.6709 M144.552 78.9672 Q150.362 78.9672 153.417 83.5736 Q156.496 88.157 156.496 96.9069 Q156.496 105.634 153.417 110.24 Q150.362 114.823 144.552 114.823 Q138.741 114.823 135.663 110.24 Q132.607 105.634 132.607 96.9069 Q132.607 88.157 135.663 83.5736 Q138.741 78.9672 144.552 78.9672 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><polyline clip-path="url(#clip991)" style="stroke:#009af9; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="265.984,1676.13 271.748,1679.53 277.512,1682.86 283.276,1686.11 289.04,1689.29 294.804,1692.39 300.568,1695.41 306.332,1698.36 312.096,1701.23 317.86,1704.02 323.624,1706.73 329.388,1709.37 335.152,1711.93 340.916,1714.4 346.68,1716.8 352.444,1719.12 358.208,1721.36 363.972,1723.52 369.736,1725.6 375.5,1727.6 381.264,1729.52 387.028,1731.36 392.792,1733.12 398.556,1734.79 404.32,1736.39 410.084,1737.91 415.848,1739.34 421.612,1740.69 427.376,1741.96 433.14,1743.15 438.904,1744.26 444.668,1745.28 450.432,1746.22 456.196,1747.08 461.96,1747.86 467.724,1748.56 473.488,1749.17 479.252,1749.7 485.016,1750.15 490.78,1750.52 496.544,1750.8 502.308,1751 508.072,1751.12 513.837,1751.15 519.601,1751.1 525.365,1750.97 531.129,1750.76 536.893,1750.46 542.657,1750.08 548.421,1749.62 554.185,1749.08 559.949,1748.45 565.713,1747.74 571.477,1746.95 577.241,1746.08 583.005,1745.12 588.769,1744.09 594.533,1742.97 600.297,1741.76 606.061,1740.48 611.825,1739.12 617.589,1737.67 623.353,1736.14 629.117,1734.53 634.881,1732.84 640.645,1731.07 646.409,1729.22 652.173,1727.29 657.937,1725.27 663.701,1723.18 669.465,1721.01 675.229,1718.76 680.993,1716.42 686.757,1714.01 692.521,1711.52 698.285,1708.95 704.049,1706.31 709.813,1703.58 715.577,1700.78 721.341,1697.9 727.105,1694.94 732.869,1691.9 738.633,1688.79 744.397,1685.6 750.161,1682.34 755.925,1678.99 761.689,1675.58 767.453,1672.09 773.217,1668.52 778.981,1664.88 784.745,1661.16 790.509,1657.38 796.273,1653.51 802.037,1649.58 807.801,1645.57 813.565,1641.49 819.329,1637.34 825.093,1633.12 830.857,1628.82 836.621,1624.46 842.385,1620.03 848.149,1615.52 853.913,1610.95 859.677,1606.31 865.441,1601.6 871.205,1596.82 876.969,1591.97 882.733,1587.06 888.497,1582.09 894.261,1577.04 900.025,1571.93 905.789,1566.76 911.553,1561.52 917.317,1556.22 923.081,1550.85 928.845,1545.43 934.609,1539.94 940.373,1534.38 946.137,1528.77 951.901,1523.1 957.665,1517.37 963.429,1511.57 969.193,1505.72 974.957,1499.81 980.721,1493.85 986.485,1487.82 992.249,1481.74 998.013,1475.61 1003.78,1469.41 1009.54,1463.17 1015.31,1456.87 1021.07,1450.52 1026.83,1444.11 1032.6,1437.65 1038.36,1431.14 1044.13,1424.59 1049.89,1417.98 1055.65,1411.32 1061.42,1404.61 1067.18,1397.85 1072.95,1391.05 1078.71,1384.2 1084.47,1377.3 1090.24,1370.36 1096,1363.38 1101.77,1356.35 1107.53,1349.27 1113.29,1342.16 1119.06,1335 1124.82,1327.8 1130.59,1320.56 1136.35,1313.28 1142.11,1305.97 1147.88,1298.61 1153.64,1291.22 1159.41,1283.79 1165.17,1276.32 1170.93,1268.82 1176.7,1261.29 1182.46,1253.72 1188.23,1246.11 1193.99,1238.48 1199.75,1230.81 1205.52,1223.12 1211.28,1215.39 1217.05,1207.64 1222.81,1199.85 1228.57,1192.04 1234.34,1184.2 1240.1,1176.34 1245.87,1168.45 1251.63,1160.53 1257.39,1152.6 1263.16,1144.64 1268.92,1136.65 1274.69,1128.65 1280.45,1120.62 1286.21,1112.58 1291.98,1104.52 1297.74,1096.44 1303.51,1088.34 1309.27,1080.22 1315.03,1072.09 1320.8,1063.95 1326.56,1055.79 1332.33,1047.62 1338.09,1039.43 1343.85,1031.24 1349.62,1023.03 1355.38,1014.81 1361.15,1006.59 1366.91,998.354 1372.67,990.112 1378.44,981.864 1384.2,973.61 1389.97,965.351 1395.73,957.088 1401.49,948.822 1407.26,940.553 1413.02,932.283 1418.79,924.012 1424.55,915.74 1430.31,907.47 1436.08,899.201 1441.84,890.935 1447.61,882.672 1453.37,874.413 1459.13,866.159 1464.9,857.911 1470.66,849.67 1476.43,841.436 1482.19,833.21 1487.95,824.993 1493.72,816.786 1499.48,808.59 1505.25,800.406 1511.01,792.233 1516.77,784.074 1522.54,775.929 1528.3,767.799 1534.07,759.684 1539.83,751.586 1545.59,743.505 1551.36,735.442 1557.12,727.398 1562.89,719.374 1568.65,711.37 1574.41,703.388 1580.18,695.427 1585.94,687.489 1591.71,679.575 1597.47,671.686 1603.23,663.821 1609,655.983 1614.76,648.171 1620.53,640.387 1626.29,632.632 1632.05,624.905 1637.82,617.209 1643.58,609.543 1649.35,601.908 1655.11,594.306 1660.87,586.737 1666.64,579.201 1672.4,571.7 1678.17,564.235 1683.93,556.805 1689.69,549.412 1695.46,542.056 1701.22,534.738 1706.99,527.46 1712.75,520.221 1718.51,513.023 1724.28,505.865 1730.04,498.75 1735.81,491.676 1741.57,484.647 1747.33,477.661 1753.1,470.719 1758.86,463.824 1764.63,456.974 1770.39,450.17 1776.15,443.415 1781.92,436.707 1787.68,430.048 1793.45,423.438 1799.21,416.879 1804.97,410.37 1810.74,403.912 1816.5,397.507 1822.27,391.154 1828.03,384.854 1833.79,378.609 1839.56,372.417 1845.32,366.282 1851.09,360.201 1856.85,354.178 1862.61,348.211 1868.38,342.302 1874.14,336.45 1879.91,330.658 1885.67,324.925 1891.43,319.252 1897.2,313.64 1902.96,308.088 1908.73,302.598 1914.49,297.17 1920.25,291.805 1926.02,286.503 1931.78,281.265 1937.55,276.091 1943.31,270.982 1949.07,265.938 1954.84,260.96 1960.6,256.048 1966.37,251.204 1972.13,246.426 1977.89,241.716 1983.66,237.075 1989.42,232.502 1995.19,227.998 2000.95,223.564 2006.71,219.199 2012.48,214.906 2018.24,210.683 2024.01,206.532 2029.77,202.452 2035.53,198.445 2041.3,194.51 2047.06,190.648 2052.83,186.859 2058.59,183.144 2064.35,179.503 2070.12,175.937 2075.88,172.445 2081.65,169.029 2087.41,165.688 2093.18,162.422 2098.94,159.234 2104.7,156.121 2110.47,153.085 2116.23,150.127 2122,147.246 2127.76,144.442 2133.52,141.716 2139.29,139.069 2145.05,136.5 2150.82,134.01 2156.58,131.599 2162.34,129.267 2168.11,127.015 2173.87,124.842 2179.64,122.749 2185.4,120.737 2191.16,118.804 2196.93,116.952 2202.69,115.181 2208.46,113.491 2214.22,111.882 2219.98,110.354 2225.75,108.907 2231.51,107.542 2237.28,106.259 2243.04,105.057 2248.8,103.937 2254.57,102.9 2260.33,101.944 2266.1,101.07 2271.86,100.279 2277.62,99.5705 2283.39,98.9442 2289.15,98.4004 2294.92,97.9391 2300.68,97.5604 2306.44,97.2644 2312.21,97.051 2317.97,96.9204 2323.74,96.8724 2329.5,96.9072 2335.26,97.0247 2341.03,97.2249 2346.79,97.5077 2352.56,97.8732 2358.32,98.3214 2364.08,98.852 2369.85,99.4652 2375.61,100.161 2381.38,100.939 2387.14,101.799 2392.9,102.742 2398.67,103.767 2404.43,104.873 2410.2,106.062 2415.96,107.332 2421.72,108.684 2427.49,110.118 2433.25,111.633 2439.02,113.229 2444.78,114.907 2450.54,116.665 2456.31,118.504 2462.07,120.423 2467.84,122.423 2473.6,124.503 2479.36,126.663 2485.13,128.903 2490.89,131.222 2496.66,133.621 2502.42,136.098 2508.18,138.655 2513.95,141.29 2519.71,144.003 2525.48,146.794 2531.24,149.663 2537,152.609 2542.77,155.632 2548.53,158.733 2554.3,161.91 2560.06,165.163 2565.82,168.491 2571.59,171.896 "></polyline>
+<path clip-path="url(#clip990)" d="M278.281 209.375 L575.105 209.375 L575.105 105.695 L278.281 105.695  Z" fill="#ffffff" fill-rule="evenodd" fill-opacity="1"></path>
+<polyline clip-path="url(#clip990)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="278.281,209.375 575.105,209.375 575.105,105.695 278.281,105.695 278.281,209.375 "></polyline>
+<polyline clip-path="url(#clip990)" style="stroke:#009af9; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="305.436,157.535 468.365,157.535 "></polyline>
+<path clip-path="url(#clip990)" d="M509.362 177.223 Q507.557 181.852 505.844 183.264 Q504.131 184.676 501.26 184.676 L497.858 184.676 L497.858 181.112 L500.358 181.112 Q502.117 181.112 503.089 180.278 Q504.061 179.445 505.242 176.343 L506.006 174.399 L495.52 148.889 L500.034 148.889 L508.135 169.167 L516.237 148.889 L520.751 148.889 L509.362 177.223 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path><path clip-path="url(#clip990)" d="M528.043 170.88 L535.682 170.88 L535.682 144.515 L527.371 146.181 L527.371 141.922 L535.635 140.255 L540.311 140.255 L540.311 170.88 L547.95 170.88 L547.95 174.815 L528.043 174.815 L528.043 170.88 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1"></path></svg>
+</div>
+</div>
+
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

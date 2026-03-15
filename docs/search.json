@@ -1,0 +1,23 @@
+[
+  {
+    "objectID": "supply_demand_elasticity/schedules_plotting.html",
+    "href": "supply_demand_elasticity/schedules_plotting.html",
+    "title": "Plotting Supply and Demand Schedules (Tables)",
+    "section": "",
+    "text": "Plots.jl is the standard plotting library for Julia:\n\nusing Plots\n\nFor testing purposes, here’s a sine curve:\n\nx = -2 : 0.01 : 2;\ny = sin.(x);\nplot(x, y)"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "econ-practice-julia",
+    "section": "",
+    "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites."
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this site"
+  }
+]
