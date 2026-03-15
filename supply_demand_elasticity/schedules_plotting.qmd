@@ -3,6 +3,8 @@ title: "Plotting Supply and Demand Schedules (Tables)"
 format: html
 ---
 
+# Preparation: Plotting and Numerical Packages
+
 `Plots.jl` is the standard plotting library for Julia:
 
 ```{julia}
@@ -12,8 +14,159 @@ using Plots
 For testing purposes, here's a sine curve:
 
 ```{julia}
-x = -2 : 0.01 : 2;
-y = sin.(x);
+x = -2 : 0.01 : 2
+y = sin.(x)
 plot(x, y)
+```
+
+Really the graphics engine connected the dots to form a smooth curve. Precisely, this is linear interpolation. We can explicitly perform such interpolation in Julia:
+
+```{julia}
+using Interpolations
+```
+
+Let's see it with a rather jagged sine curve:
+
+```{julia}
+x = -2 : 0.5 : 2
+y = sin.(x)
+f = linear_interpolation(x, y)
+plot(x, f.(x))
+```
+
+Intersection of two curves can be reframed as the intersection of their difference with the x-axis, i.e. a root-finding problem, which we will solve numerically.
+
+```{julia}
+using Roots
+```
+
+A simple example: when does $\cos(x) = 0$ in the closed interval $[1,4]$?
+
+```{julia}
+find_zero(cos, (1, 4), Bisection())
+```
+
+# Market for Pizza: Demand & Supply Schedule
+
+We are given the following data.
+
+```{julia}
+pizza_prices = [4, 5, 6, 7, 8, 9]
+pizza_demands = [135, 104, 81, 68, 53, 39]
+pizza_supplies = [26, 53, 81, 98, 110, 121]
+```
+
+Here's a plot of the supply and demand curves.
+
+```{julia}
+plot(
+    [pizza_demands, pizza_supplies],
+    pizza_prices,
+    label=["Pizza Demand" "Pizza Supply"],
+    linecolor=[:red :blue],
+    title="Pizza Demand & Supply Curves"
+)
+```
+
+The graphics engine performed linear interpolation to (literally) connect the dots. To solve for equilibrium, we will need to explicitly interpolate first.
+
+```{julia}
+pizza_demand_func = linear_interpolation(pizza_prices, pizza_demands)
+pizza_supply_func = linear_interpolation(pizza_prices, pizza_supplies)
+```
+
+The bisection method should be more than enough for our purposes.
+
+```{julia}
+pizza_diff(t) = pizza_demand_func(t) - pizza_supply_func(t)
+pizza_eq_price = find_zero(
+    pizza_diff,
+    (minimum(pizza_prices), maximum(pizza_prices)),
+    Bisection()
+)
+pizza_eq_qty = pizza_demand_func(pizza_eq_price)
+println("Equilibrium price: $pizza_eq_price")
+println("Equilibrium quantity: $pizza_eq_qty")
+```
+
+# Basketball Market at College
+
+Here's the data:
+
+```{julia}
+ball_prices = [4, 8, 12, 16, 20]
+ball_demands = [10000, 8000, 6000, 4000, 2000]
+ball_supplies = [8000, 8000, 8000, 8000, 8000]
+```
+
+Quite an unusual situation:
+
+```{julia}
+plot(
+    [ball_demands, ball_supplies],
+    ball_prices,
+    label=["Basketball Demand" "Basketball Supply"],
+    linecolor=[:red :blue],
+    title="Basketball Supply & Demand"
+)
+```
+
+Computing the equilibrium:
+
+```{julia}
+ball_demand_func = linear_interpolation(ball_prices, ball_demands)
+ball_supply_func = linear_interpolation(ball_prices, ball_supplies)
+ball_eq_price = find_zero(
+    x -> ball_demand_func(x) - ball_supply_func(x),
+    (minimum(ball_prices), maximum(ball_prices)),
+    Bisection()
+)
+ball_eq_qty = ball_demand_func(ball_eq_price)
+println("Equilibrium price: $ball_eq_price")
+println("Equilibrium quantity: $ball_eq_qty")
+```
+
+Now suppose there is a right shift in demand:
+
+```{julia}
+ball_shift_demands = [4000, 3000, 2000, 1000, 0]
+```
+
+So the new demand is that plus the old demand, while price and supply are unchanged.
+
+```{julia}
+ball_new_prices = ball_prices
+ball_new_demands = ball_demands + ball_shift_demands
+ball_new_supplies = ball_supplies
+println("Prices: $ball_new_prices")
+println("New demand: $ball_new_demands")
+println("New supply: $ball_new_supplies")
+```
+
+Let's see the shift!
+
+```{julia}
+plot(
+    [ball_demands, ball_new_demands, ball_new_supplies],
+    ball_new_prices,
+    label=["Old Demand" "New Demand" "Supply"],
+    linecolor=[:red :orange :blue],
+    title="New Supply & Demand Curves"
+)
+```
+
+Finally, we compute the new equilibrium.
+
+```{julia}
+ball_new_demand_func = linear_interpolation(ball_new_prices, ball_new_demands)
+ball_new_supply_func = ball_supply_func
+ball_new_eq_price = find_zero(
+    x -> ball_new_demand_func(x) - ball_new_supply_func(x),
+    (minimum(ball_new_prices), maximum(ball_new_prices)),
+    Bisection()
+)
+ball_new_eq_qty = ball_new_demand_func(ball_new_eq_price)
+println("New equilibrium price: $ball_new_eq_price")
+println("New equilibrium quantity: $ball_new_eq_qty")
 ```
 
