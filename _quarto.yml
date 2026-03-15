@@ -1,0 +1,23 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "econ-practice-julia"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - about.qmd
+      - supply_demand_elasticity/schedules_plotting.qmd
+
+format:
+  html:
+    theme:
+      - cosmo
+      - brand
+    css: styles.css
+    toc: true
+
+
+
