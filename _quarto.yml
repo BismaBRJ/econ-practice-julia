@@ -8,8 +8,9 @@ website:
     left:
       - href: index.qmd
         text: Home
-      - about.qmd
-      - supply_demand_elasticity/schedules_plotting.qmd
+      - text: Practice
+        menu:
+          - supply_demand_elasticity/schedules_plotting.qmd
 
 format:
   html:
@@ -19,5 +20,6 @@ format:
     css: styles.css
     toc: true
 
-
+execute:
+  freeze: auto
 
