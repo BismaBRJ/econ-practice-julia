@@ -11,6 +11,7 @@ website:
       - text: Practice
         menu:
           - supply_demand_elasticity/schedules_plotting.qmd
+          - supply_demand_elasticity/demand_elasticity.qmd
 
 format:
   html:
