@@ -1,8 +1,77 @@
 ---
-title: "Exploring Price Elasticity of Demand"
+title: "Exploring Elasticity of Demand"
 format: html
 ---
 
-# Preparation: Packages
+# Preparation: Packages and Calculation
 
-test
+We shall create some tables as dataframes:
+
+```{julia}
+using DataFrames
+```
+
+And maybe plot some demand curves...
+
+```{julia}
+using Plots
+```
+
+Now let's create a function to calculate elasticity using the aptly-named midpoint method.
+
+```{julia}
+calc_midpoint(x, y) = (x+y)/2
+
+function calc_elasticity(p1, p2, q1, q2)
+    # Of course, while q is quantity, p does not have to be price;
+    # say, for income elasticity, p would be income.
+    dp = abs(p2-p1)
+    dq = abs(q2-q1)
+    pm = calc_midpoint(p1, p2)
+    qm = calc_midpoint(q1, q2)
+    (dq/qm)/(dp/pm)
+end
+```
+
+# Airline Demand for Business vs. Vacation
+
+Here's the given data.
+
+```{julia}
+airline_df = DataFrame(
+    price=[150, 200, 250, 300],
+    business_demand=[2100, 2000, 1900, 1800],
+    vacation_demand=[1000, 800, 600, 400]
+)
+print(airline_df)
+```
+
+First, let's see the demand curves :)
+
+```{julia}
+plot(
+    airline_df.business_demand,
+    airline_df.price,
+    title="Airline Demand for Business"
+)
+```
+
+```{julia}
+plot(
+    airline_df.vacation_demand,
+    airline_df.price,
+    title="Airline Demand for Vacation"
+)
+```
+
+Together:
+
+```{julia}
+plot(
+    [airline_df.business_demand, airline_df.vacation_demand],
+    airline_df.price,
+    label=["for Business" "for Vacation"],
+    title="Airline Demand"
+)
+```
+
