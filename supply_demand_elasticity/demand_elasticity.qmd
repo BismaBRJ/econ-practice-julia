@@ -33,6 +33,54 @@ function calc_elasticity(p1, p2, q1, q2)
 end
 ```
 
+Example calculation: as price rises from \$2.85 to \$3.15, quantity of milk supplied rises from 9,000 to 11,000 gallons; then the price elasticity of milk supply in this case is 10 percent. (Which is 0.1, which is inelastic.)
+
+```{julia}
+calc_elasticity(2.85, 3.15, 9000, 11000)
+```
+
+Since we are using the midpoint method, might as well... let's make a function to calculate elasticities at midpoints from supplied data (pun unintended).
+
+```{julia}
+function calc_elasticities(ps, qs)
+    changes_p = [ (ps[i+1]-ps[i]) / ((ps[i]+ps[i+1])/2) for i = 1:length(ps)-1 ]
+    changes_q = [ (qs[i+1]-qs[i]) / ((qs[i]+qs[i+1])/2) for i = 1:length(qs)-1 ]
+    changes_q ./ changes_p
+end
+```
+
+An example: a given linear demand curve
+
+```{julia}
+calc_elasticities(  [7, 6, 5, 4, 3, 2, 1, 0],
+                    [0, 2, 4, 6, 8, 10, 12, 14] )
+```
+
+Another version with midpoints:
+
+```{julia}
+function calc_ms_es(ps, qs)
+    diffs_p = [ ps[i+1] - ps[i] for i=1:length(ps)-1 ]
+    diffs_q = [ qs[i+1] - qs[i] for i=1:length(qs)-1 ]
+    midpoints_p = [ (ps[i] + ps[i+1])/2 for i=1:length(ps)-1 ]
+    midpoints_q = [ (qs[i] + qs[i+1])/2 for i=1:length(qs)-1 ]
+    changes_p = diffs_p ./ midpoints_p
+    changes_q = diffs_q ./ midpoints_q
+    es = changes_q ./ changes_p
+    midpoints_p, midpoints_q, es
+end
+```
+
+Let's see how it turns out:
+
+```{julia}
+test_mps, test_mqs, test_es = calc_ms_es(   [7, 6, 5, 4, 3, 2, 1, 0],
+                                            [0, 2, 4, 6, 8, 10, 12, 14] )
+println("Price midpoints: \n$test_mps")
+println("Quantity midpoints: \n$test_mqs")
+println("Elasticities: \n$test_es")
+```
+
 # Airline Demand for Business vs. Vacation
 
 Here's the given data.
@@ -74,4 +122,32 @@ plot(
     title="Airline Demand"
 )
 ```
+
+Now we can calculate the elasticities...
+
+```{julia}
+business_results = calc_ms_es(airline_df.price, airline_df.business_demand)
+business_mps, business_mqs, business_es = business_results
+
+business_df = DataFrame(
+    price_midpoints=business_mps,
+    demand_midpoints=business_mqs,
+    elasticities=business_es
+)
+print(business_df)
+```
+
+```{julia}
+vacation_results = calc_ms_es(airline_df.price, airline_df.vacation_demand)
+vacation_mps, vacation_mqs, vacation_es = vacation_results
+
+vacation_df = DataFrame(
+    price_midpoints=vacation_mps,
+    demand_midpoints=vacation_mqs,
+    elasticities=vacation_es
+)
+print(vacation_df)
+```
+
+and we can plot them: (todo)
 
